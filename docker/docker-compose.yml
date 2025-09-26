@@ -1,4 +1,3 @@
-
 services:
   db:
     image: mysql:8.0
@@ -19,11 +18,11 @@ services:
       retries: 10
 
   backend:
-    build: ./backend
+    build: ../backend
     environment:
       NODE_ENV: production
       PORT: 3001
-      FRONTEND_URL: http://frontend  # Use Docker service name
+      FRONTEND_URL: http://frontend
       JWT_SECRET: dev_secret
       JWT_EXPIRE: 7d
       MYSQL_HOST: db
@@ -40,7 +39,7 @@ services:
       - "3002:3001"
 
   frontend:
-    build: ./frontend
+    build: ..
     ports:
       - "5173:80"
     depends_on:
