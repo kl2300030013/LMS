@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   db:
     image: mysql:8.0
@@ -18,11 +20,11 @@ services:
       retries: 10
 
   backend:
-    build: ../backend
+    build: ./backend
     environment:
       NODE_ENV: production
       PORT: 3001
-      FRONTEND_URL: http://localhost:5173
+      FRONTEND_URL: http://frontend  # Use Docker service name
       JWT_SECRET: dev_secret
       JWT_EXPIRE: 7d
       MYSQL_HOST: db
@@ -30,6 +32,8 @@ services:
       MYSQL_USER: eduflow
       MYSQL_PASSWORD: eduflow
       MYSQL_DATABASE: eduflow
+      SUPABASE_URL: your_supabase_url
+      SUPABASE_ANON_KEY: your_supabase_key
     depends_on:
       db:
         condition: service_healthy
@@ -37,7 +41,7 @@ services:
       - "3002:3001"
 
   frontend:
-    build: ..
+    build: ./frontend
     ports:
       - "5173:80"
     depends_on:
@@ -45,5 +49,3 @@ services:
 
 volumes:
   db-data:
-
-
