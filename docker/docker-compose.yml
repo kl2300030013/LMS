@@ -18,9 +18,7 @@ services:
       retries: 10
 
   backend:
-    build:
-      context: ../backend
-      dockerfile: Dockerfile
+    build: ../backend
     env_file:
       - ../backend/.env
     depends_on:
@@ -30,11 +28,7 @@ services:
       - "3002:3001"
 
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
-    env_file:
-      - ../frontend/.env   # optional, only if you need env vars in frontend
+    build: ..
     ports:
       - "5173:80"
     depends_on:
