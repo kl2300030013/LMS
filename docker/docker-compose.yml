@@ -1,0 +1,49 @@
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: eduflow
+      MYSQL_USER: eduflow
+      MYSQL_PASSWORD: eduflow
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./mysql:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "3310:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ../backend
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      FRONTEND_URL: http://localhost:5173
+      JWT_SECRET: dev_secret
+      JWT_EXPIRE: 7d
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+      MYSQL_USER: eduflow
+      MYSQL_PASSWORD: eduflow
+      MYSQL_DATABASE: eduflow
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3002:3001"
+
+  frontend:
+    build: ..
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  db-data:
+
+
