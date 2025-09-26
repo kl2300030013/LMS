@@ -19,19 +19,8 @@ services:
 
   backend:
     build: ../backend
-    environment:
-      NODE_ENV: production
-      PORT: 3001
-      FRONTEND_URL: http://frontend
-      JWT_SECRET: dev_secret
-      JWT_EXPIRE: 7d
-      MYSQL_HOST: db
-      MYSQL_PORT: 3306
-      MYSQL_USER: eduflow
-      MYSQL_PASSWORD: eduflow
-      MYSQL_DATABASE: eduflow
-      SUPABASE_URL: your_supabase_url
-      SUPABASE_ANON_KEY: your_supabase_key
+    env_file:
+      - ../backend/.env   # load environment variables from backend/.env
     depends_on:
       db:
         condition: service_healthy
@@ -40,6 +29,8 @@ services:
 
   frontend:
     build: ..
+    env_file:
+      - ../frontend/.env   # optional: if you add frontend/.env
     ports:
       - "5173:80"
     depends_on:
